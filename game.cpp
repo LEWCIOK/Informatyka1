@@ -42,6 +42,7 @@ void Game::update(sf::Time dt)
 
     if (m_pilka.collidePaddle(m_paletka)) {
         std::cout << "HIT PADDLE\n";
+        m_hits++;
     }
 
     // kolizje z blokami
@@ -70,6 +71,7 @@ void Game::update(sf::Time dt)
     // piłka spadła
     if (m_pilka.getY() - m_pilka.getRadius() > HEIGHT) {
         std::cout << "MISS! KONIEC GRY\n";
+        m_lastScore = m_hits;
         m_gameOver = true;   // <-- sygnał do main
     }
 
@@ -134,4 +136,5 @@ void Game::reset()
     // Reset flagi końca gry
     m_gameOver = false;
     m_frame = 0;
+    m_hits = 0;
 }

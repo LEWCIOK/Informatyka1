@@ -17,6 +17,9 @@ public:
     void reset();
     
     bool isGameOver() const { return m_gameOver; }
+    int getHits() const { return m_hits; }
+    int getLastScore() const { return m_lastScore; }
+    void setLastScore(int s) { m_lastScore = s; }
 
     template<typename T>
     T clampValue(T value, T minv, T maxv) {
@@ -34,6 +37,8 @@ private:
 
     int m_frame = 0;
     bool m_gameOver = false;   // <-- DODANE
+    int m_hits = 0;
+    int m_lastScore = 0;
 };
 
 

@@ -1,6 +1,7 @@
 ﻿#include <SFML/Graphics.hpp>
 #include "menu.h"
 #include "game.h"
+#include <fstream>
 
 enum class GameState {
     Menu,
@@ -19,6 +20,9 @@ int main()
 
     GameState currentState = GameState::Menu;
     sf::Clock dtClock;
+
+    sf::Font font;
+    font.loadFromFile("arial.ttf");
 
     while (window.isOpen())
     {
@@ -43,16 +47,16 @@ int main()
                     {
                         int selected = menu.getSelectedItem();
 
-                        if (selected == 0)              // NOWA GRA
+                        if (selected == 0)  // NOWA GRA
                         {
-                            game.reset();               // 🔥 Restart gry
+                            game.reset();
                             currentState = GameState::Playing;
                         }
-                        else if (selected == 1)         // WYNIKI
+                        else if (selected == 1) // WYNIKI
                         {
                             currentState = GameState::Scores;
                         }
-                        else if (selected == 2)         // WYJŚCIE
+                        else if (selected == 2) // WYJŚCIE
                         {
                             currentState = GameState::Exiting;
                         }
@@ -70,7 +74,7 @@ int main()
                 }
             }
 
-            // ============= WYNIKI ===================
+            // ============== WYNIKI ==================
             else if (currentState == GameState::Scores)
             {
                 if (event.type == sf::Event::KeyPressed &&
@@ -82,7 +86,7 @@ int main()
         }
 
         // ============================================
-        //                 UPDATE
+        //                  UPDATE
         // ============================================
         sf::Time dt = dtClock.restart();
 
@@ -91,7 +95,18 @@ int main()
             game.update(dt);
 
             if (game.isGameOver())
-                currentState = GameState::Scores;
+            {
+                // ZAPISZ wynik do pliku
+                std::ofstream file("scores.txt", std::ios::app);
+                if (file)
+                    file << game.getHits() << "\n";
+
+                // ZAPISZ wynik do pamięci gry (getLastScore)
+                game.setLastScore(game.getHits());
+
+                // ⭐ PO PROSTU WRÓĆ DO MENU — NIE otwieraj Scores!
+                currentState = GameState::Menu;
+            }
         }
         else if (currentState == GameState::Exiting)
         {
@@ -99,7 +114,7 @@ int main()
         }
 
         // ============================================
-        //                 RENDER
+        //                  RENDER
         // ============================================
         window.clear();
 
@@ -113,10 +128,14 @@ int main()
         }
         else if (currentState == GameState::Scores)
         {
-            sf::Font font;
-            font.loadFromFile("C:\\Users\\macie\\source\\repos\\projektsfml1\\x64\\Release\\Arial.ttf");
+            int wynik = game.getLastScore();
 
-            sf::Text text("KONIEC GRY - wcisnij Enter", font, 28);
+            sf::Text text(
+                "Ostatni wynik: " + std::to_string(wynik) +
+                "\nWcisnij Enter",
+                font, 28
+            );
+
             text.setFillColor(sf::Color::White);
 
             sf::FloatRect b = text.getLocalBounds();
