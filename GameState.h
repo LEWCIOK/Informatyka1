@@ -3,20 +3,21 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <string>
 
-// ===== DANE BLOKU =====
+
 struct BlockData {
     float x, y;
     float width, height;
     int hp;
 };
 
-// ===== DEKLARACJE TWOICH KLAS =====
+
 class paletka;
 class pilka;
 class Stone;
 
-// ===== STAN GRY =====
+
 class GameState {
 private:
     sf::Vector2f paddlePosition;
@@ -26,12 +27,17 @@ private:
 
 public:
     GameState() = default;
+    bool loadFromFile(const std::string& filename);
+    void apply(paletka& paddle, pilka& ball, std::vector<Stone>& stones) const;
 
     void capture(const paletka& paddle,
         const pilka& ball,
         const std::vector<Stone>& stones);
 
-    // Gettery � opcjonalne
+    
+    bool saveToFile(const std::string& filename) const;
+
+   
     const sf::Vector2f& getPaddlePos() const { return paddlePosition; }
     const sf::Vector2f& getBallPos() const { return ballPosition; }
     const sf::Vector2f& getBallVel() const { return ballVelocity; }

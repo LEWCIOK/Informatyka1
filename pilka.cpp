@@ -52,10 +52,10 @@ bool pilka::collidePaddle(const paletka& p)
         vy = -std::abs(vy);
         y = (py - halfH) - radius;
 
-        // zachowanie ogólnej prêdkoœci
+       
         float speed = std::sqrt(vx * vx + vy * vy);
 
-        // odbicie zale¿ne od miejsca trafienia
+       
         float relativeHit = (x - px) / halfW;
         vx = relativeHit * speed;
 

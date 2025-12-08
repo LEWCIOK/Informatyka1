@@ -1,24 +1,31 @@
 #include "menu.h"
 
 Menu::Menu(float width, float height) {
-   font.loadFromFile("C:\\Users\\macie\\source\\repos\\projektsfml1\\x64\\Release\\Arial.ttf");
+    font.loadFromFile("arial.ttf");
 
-
-
+    
     menu[0].setFont(font);
     menu[0].setFillColor(sf::Color::Cyan);
     menu[0].setString("Nowa gra");
-    menu[0].setPosition({ width / 3, height / 4 });
+    menu[0].setPosition({ width / 3, height / 5 });
 
+    
     menu[1].setFont(font);
     menu[1].setFillColor(sf::Color::White);
-    menu[1].setString("Ostatnie wyniki");
-    menu[1].setPosition({ width / 3, height / 2 });
+    menu[1].setString("Wczytaj gre");
+    menu[1].setPosition({ width / 3, height / 5 * 2 });
 
+    
     menu[2].setFont(font);
     menu[2].setFillColor(sf::Color::White);
-    menu[2].setString("Wyjscie");
-    menu[2].setPosition({ width / 3, height / 4 * 3 });
+    menu[2].setString("Ostatnie wyniki");
+    menu[2].setPosition({ width / 3, height / 5 * 3 });
+
+    
+    menu[3].setFont(font);
+    menu[3].setFillColor(sf::Color::White);
+    menu[3].setString("Wyjscie");
+    menu[3].setPosition({ width / 3, height / 5 * 4 });
 }
 
 void Menu::draw(sf::RenderWindow& window) {

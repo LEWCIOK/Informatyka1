@@ -1,12 +1,14 @@
 ﻿#include "game.h"
 #include <iostream>
 #include "GameState.h"
+#include <fstream>
+#include <string>
 
 Game::Game()
     : m_paletka(320.f, 440.f, 100.f, 20.f, 8.f),
     m_pilka(320.f, 300.f, 4.f, 1.f, 4.f)
 {
-    // ---- GENEROWANIE BLOKÓW ----
+   
     const int ILOSC_KOLUMN = 6;
     const int ILOSC_WIERSZY = 7;
     const float ROZMIAR_BLOKU_Y = 25.f;
@@ -45,7 +47,7 @@ void Game::update(sf::Time dt)
         m_hits++;
     }
 
-    // kolizje z blokami
+    
     for (auto& b : m_bloki) {
         if (b.isDestroyed()) continue;
 
@@ -68,17 +70,13 @@ void Game::update(sf::Time dt)
         }
     }
 
-    // piłka spadła
+    
     if (m_pilka.getY() - m_pilka.getRadius() > HEIGHT) {
         std::cout << "MISS! KONIEC GRY\n";
         m_lastScore = m_hits;
-        m_gameOver = true;   // <-- sygnał do main
+        m_gameOver = true;
     }
 
-        // okno zamyka MAIN, nie tu
-    
-
-    // debug co 30 klatek
     if (m_frame % 30 == 0) {
         std::cout << "x=" << m_pilka.getX()
             << " y=" << m_pilka.getY()
@@ -97,15 +95,16 @@ void Game::render(sf::RenderTarget& target)
     for (auto& b : m_bloki)
         b.draw(target);
 }
+
 void Game::reset()
 {
-    // Reset paletki
+    
     m_paletka = paletka(320.f, 440.f, 100.f, 20.f, 8.f);
 
-    // Reset piłki
+    
     m_pilka = pilka(320.f, 300.f, 4.f, 1.f, 4.f);
 
-    // Reset bloków
+    
     m_bloki.clear();
 
     const int ILOSC_KOLUMN = 6;
@@ -133,8 +132,53 @@ void Game::reset()
         }
     }
 
-    // Reset flagi końca gry
     m_gameOver = false;
     m_frame = 0;
     m_hits = 0;
 }
+
+
+void Game::captureGameState()
+{
+    GameState gs;
+
+  
+    gs.capture(m_paletka, m_pilka, m_bloki);
+
+  
+    if (gs.saveToFile("zapis.txt"))
+        std::cout << "[Game] Stan gry zapisany do zapis.txt\n";
+    else
+        std::cout << "[Game] ❌ Błąd zapisu stanu gry!\n";
+}
+void Game::loadSavedGame()
+{
+    GameState gs;
+
+    if (!gs.loadFromFile("zapis.txt"))
+    {
+        std::cout << "❌ Blad: nie mozna wczytac zapis.txt\n";
+        return;
+    }
+
+    gs.apply(m_paletka, m_pilka, m_bloki);
+
+    std::cout << "✔ Stan gry wczytany!\n";
+}
+bool Game::loadGame(const std::string& filename)
+{
+    if (!m_savedState.loadFromFile(filename))
+        return false;
+
+    m_savedState.apply(m_paletka, m_pilka, m_bloki);
+
+    m_gameOver = false;
+    m_hits = 0;
+    m_frame = 0;
+
+    std::cout << "[Game] Gra została wczytana.\n";
+    return true;
+}
+
+
+

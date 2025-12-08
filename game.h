@@ -6,6 +6,7 @@
 #include "stone.h"
 #include "paletka.h"
 #include "pilka.h"
+#include "GameState.h"
 
 class Game
 {
@@ -15,11 +16,18 @@ public:
     void update(sf::Time dt);
     void render(sf::RenderTarget& target);
     void reset();
-    
+    void loadSavedGame();
+    bool loadGame(const std::string& filename);
+
+
     bool isGameOver() const { return m_gameOver; }
     int getHits() const { return m_hits; }
     int getLastScore() const { return m_lastScore; }
     void setLastScore(int s) { m_lastScore = s; }
+
+    
+    void captureGameState();
+    
 
     template<typename T>
     T clampValue(T value, T minv, T maxv) {
@@ -36,10 +44,12 @@ private:
     const float HEIGHT = 480.f;
 
     int m_frame = 0;
-    bool m_gameOver = false;   // <-- DODANE
+    bool m_gameOver = false;
     int m_hits = 0;
     int m_lastScore = 0;
-};
 
+    
+    GameState m_savedState;
+};
 
 #endif

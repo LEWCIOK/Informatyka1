@@ -2,12 +2,13 @@
 #include "menu.h"
 #include "game.h"
 #include <fstream>
+#include <iostream>
 
-enum class GameState {
+enum class meniuuu {
     Menu,
     Playing,
     Scores,
-    Exiting
+    Exiting,
 };
 
 int main()
@@ -18,7 +19,7 @@ int main()
     Menu menu(window.getSize().x, window.getSize().y);
     Game game;
 
-    GameState currentState = GameState::Menu;
+    meniuuu currentState = meniuuu::Menu;
     sf::Clock dtClock;
 
     sf::Font font;
@@ -30,10 +31,10 @@ int main()
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
-                currentState = GameState::Exiting;
+                currentState = meniuuu::Exiting;
 
-            // ================= MENU =================
-            if (currentState == GameState::Menu)
+           
+            if (currentState == meniuuu::Menu)
             {
                 if (event.type == sf::Event::KeyPressed)
                 {
@@ -47,86 +48,107 @@ int main()
                     {
                         int selected = menu.getSelectedItem();
 
-                        if (selected == 0)  // NOWA GRA
+                        
+                        if (selected == 0)
                         {
                             game.reset();
-                            currentState = GameState::Playing;
+                            currentState = meniuuu::Playing;
                         }
-                        else if (selected == 1) // WYNIKI
+
+                       
+                        else if (selected == 1) 
                         {
-                            currentState = GameState::Scores;
+                            if (game.loadGame("zapis.txt"))   
+                            {
+                                std::cout << "Gra wczytana!\n";
+                                currentState = meniuuu::Playing;
+                            }
+                            else
+                            {
+                                std::cout << "Blad wczytywania gry!\n";
+                            }
                         }
-                        else if (selected == 2) // WYJŚCIE
+
+                        
+                        else if (selected == 2)
                         {
-                            currentState = GameState::Exiting;
+                            currentState = meniuuu::Scores;
+                        }
+
+                        
+                        else if (selected == 3)
+                        {
+                            currentState = meniuuu::Exiting;
                         }
                     }
                 }
             }
 
-            // ================ GRA ===================
-            else if (currentState == GameState::Playing)
+            
+            else if (currentState == meniuuu::Playing)
             {
-                if (event.type == sf::Event::KeyPressed &&
-                    event.key.code == sf::Keyboard::Escape)
+                if (event.type == sf::Event::KeyPressed)
                 {
-                    currentState = GameState::Menu;
+                    
+                    if (event.key.code == sf::Keyboard::Escape)
+                    {
+                        currentState = meniuuu::Menu;
+                    }
+                    
+                    else if (event.key.code == sf::Keyboard::P)
+                    {
+                        game.captureGameState();
+                        std::cout << "Stan gry zapisany!\n";
+                    }
                 }
             }
 
-            // ============== WYNIKI ==================
-            else if (currentState == GameState::Scores)
+            
+            else if (currentState == meniuuu::Scores)
             {
                 if (event.type == sf::Event::KeyPressed &&
                     event.key.code == sf::Keyboard::Enter)
                 {
-                    currentState = GameState::Menu;
+                    currentState = meniuuu::Menu;
                 }
             }
         }
 
-        // ============================================
-        //                  UPDATE
-        // ============================================
+        
         sf::Time dt = dtClock.restart();
 
-        if (currentState == GameState::Playing)
+        if (currentState == meniuuu::Playing)
         {
             game.update(dt);
 
             if (game.isGameOver())
             {
-                // ZAPISZ wynik do pliku
                 std::ofstream file("scores.txt", std::ios::app);
                 if (file)
                     file << game.getHits() << "\n";
 
-                // ZAPISZ wynik do pamięci gry (getLastScore)
                 game.setLastScore(game.getHits());
 
-                // ⭐ PO PROSTU WRÓĆ DO MENU — NIE otwieraj Scores!
-                currentState = GameState::Menu;
+                currentState = meniuuu::Menu;
             }
         }
-        else if (currentState == GameState::Exiting)
+        else if (currentState == meniuuu::Exiting)
         {
             window.close();
         }
 
-        // ============================================
-        //                  RENDER
-        // ============================================
+        
         window.clear();
 
-        if (currentState == GameState::Menu)
+        if (currentState == meniuuu::Menu)
         {
             menu.draw(window);
         }
-        else if (currentState == GameState::Playing)
+        else if (currentState == meniuuu::Playing)
         {
             game.render(window);
         }
-        else if (currentState == GameState::Scores)
+        else if (currentState == meniuuu::Scores)
         {
             int wynik = game.getLastScore();
 

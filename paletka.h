@@ -19,6 +19,12 @@ public:
 	void moveRight();
 	void clampToBounds(float width);
 	void draw(sf::RenderTarget& target);
+	void setPosition(float nx, float ny) {
+		x = nx;
+		y = ny;
+		shape.setPosition(x, y);
+	}
+
 
 
 	float getX() const { return x; }
@@ -28,6 +34,7 @@ public:
 	sf::Vector2f getPosition() const {
 		return sf::Vector2f(x, y);
 	}
+	
 
 };
 

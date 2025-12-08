@@ -34,6 +34,16 @@ public:
 	sf::Vector2f getVelocity() const {
 		return sf::Vector2f(vx, vy);
 	}
+	void setPosition(float nx, float ny) {
+		x = nx;
+		y = ny;
+		shape.setPosition(x, y);
+	}
+
+	void setVelocity(float nvx, float nvy) {
+		vx = nvx;
+		vy = nvy;
+	}
 
 };
 
