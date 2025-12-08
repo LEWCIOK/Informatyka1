@@ -1,2 +1,5 @@
-# Informatyka1
+🎮 Projekt 1 – Gra Arkanoid
 
+Arkanoid to klasyczna gra zręcznościowa, w której gracz steruje paletką, odbijając piłkę tak, aby utrzymać ją jak najdłużej w grze. Piłka odbija się od ścian oraz klocków, które po trafieniu mogą ulec zniszczeniu. Celem gracza jest utrzymanie piłki na planszy oraz zdobycie jak najwyższego wyniku. Przegrana następuje wtedy, gdy piłka spadnie poniżej paletki i nie można jej już odbić. Wynik punktowy zależy od liczby odbić piłki, a nie od ilości zniszczonych klocków.
+
+Sterowanie odbywa się za pomocą klawiszy strzałek, które pozwalają poruszać paletką w lewo lub w prawo. Zatwierdzanie wyborów w menu odbywa się poprzez klawisz Enter, a w dowolnym momencie gry można skorzystać z opcji zapisu postępu, naciskając klawisz P. Gra oferuje możliwość rozpoczęcia rozgrywki od nowa, system punktacji oraz funkcję zapisu i wczytywania aktualnego stanu gry, co pozwala wrócić do rozgrywki w dowolnym czasie.
